@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>statistics</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+</head>
+<body>
+	<script type="text/javascript">
+		function ext(what,bywhat='0',to=2){
+	        what=what.toString();
+	        while(what.length<to){
+	            what=bywhat+what;
+	        }
+	        return what;
+	    }
+
+	    function formatDate(dims){
+	        dims/=1000;
+	        let d=Math.floor(dims/(24*60*60));
+	        dims-=d*24*60*60;
+	        let h=Math.floor(dims/(60*60));
+	        dims-=h*60*60;
+	        let m=Math.floor(dims/60);
+	        dims-=m*60;
+	        let s=Math.floor(dims);
+
+	        return `${ext(d)}д. ${ext(h)}:${ext(m)}:${ext(s)}`;
+	    }
+		function n(en){return document.createElement(en);}
+		function arrtotable(arr,theadcontent){
+	        let maindiv=n('div');
+	        maindiv.classList.add('container');
+
+	        let table=n('table');
+	        table.classList.add('table','table-striped','my-2');
+
+	        let thead=n('thead');
+	        let tr=n('tr');
+	        let th;
+	        for(let i=0;i<theadcontent.length;i++){
+	            th=n('th');
+	            th.setAttribute('scope','col');
+	            th.innerText=theadcontent[i];
+	            tr.appendChild(th);
+	        }
+	        thead.appendChild(tr);
+	        table.appendChild(thead);
+
+	        let tbody=n('tbody');
+	        for(let i=0;i<arr.length;i++){
+	            tr=n('tr');
+
+	            th=n('th');
+	            th.setAttribute('scope','row');
+	            th.innerText=i+1;
+	            tr.appendChild(th);
+
+	            th=n('th');
+	            th.innerText=arr[i][0];
+	            tr.appendChild(th);
+
+	            th=n('th');
+	            th.innerText=arr[i][1].fullMsgCount;
+	            tr.appendChild(th);
+	            th=n('th');
+	            th.innerText=formatDate(arr[i][1].fat);
+	            tr.appendChild(th);
+
+	            tbody.appendChild(tr);
+	        }
+	        table.appendChild(tbody);
+
+	        maindiv.appendChild(table);
+
+	        return maindiv;
+	    }
+		let link=new URL(location.href);
+		let data=JSON.parse(atob(link.searchParams.get('data')));
+		let table=arrtotable(data,['#','nickname','msgcount','activetime']);
+
+		document.body.appendChild(table);
+	</script>
+</body>
+</html>
